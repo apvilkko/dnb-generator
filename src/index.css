@@ -1,0 +1,49 @@
+body {
+  text-align: center;
+}
+
+h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+button {
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.pattern {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.pattern-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #999;
+  height: 2rem;
+  min-width: calc(100% / 17);
+  transition: background-color linear 0.1s;
+}
+
+.pattern-item:nth-child(4n+1) {
+  background-color: #ddd;
+}
+
+.pattern-item:nth-child(16n+1) {
+  background-color: #ccc;
+}
+
+.current {
+  background-color: yellow;
+  box-shadow: 1px 1px 5px black;
+}
+
+li {
+  list-style-type: none;
+}
+
+footer {
+  margin-top: 4rem;
+}
