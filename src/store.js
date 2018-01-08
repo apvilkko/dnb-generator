@@ -3,7 +3,10 @@ import {observable, action} from 'mobx';
 const store = observable({
   tempo: null,
   currentIndex: 0,
-  pattern: []
+  pattern: {
+    drumloop: [],
+    sub: [],
+  }
 });
 
 store.setTempo = action(tempo => {

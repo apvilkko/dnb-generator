@@ -22,12 +22,13 @@ const generate = () => {
   console.log(tempo, sampleTempo, pattern);
   const samples = {
     drumloop: sampleName,
+    sub: 'sub1',
   };
   return {
-    playbackRate: tempo / sampleTempo,
+    playbackRate: tempo / sampleTempo * .99,
     samples,
     tempo,
-    pattern: pattern.map(item => (item ? item.time : item)),
+    pattern,
     store,
   };
 };
@@ -35,6 +36,7 @@ const generate = () => {
 const init = () => {
   engine = createAudioEngine();
   loadSample(engine.context, engine.buffers, 'amen1');
+  loadSample(engine.context, engine.buffers, 'sub1');
   engine.scene = generate();
   startTick(engine, tick);
 };

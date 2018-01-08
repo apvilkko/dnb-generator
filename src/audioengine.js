@@ -9,7 +9,10 @@ const createAudioEngine = () => {
     buffers: {},
     scene: {
       tempo: 170,
-      pattern: [],
+      pattern: {
+        drumloop: [],
+        sub: [],
+      },
     },
     sequencer: {
       currentNote: 0,

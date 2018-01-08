@@ -5,20 +5,25 @@ const scheduleAheadTime = 0.1;
 const noteLen = 0.25;
 const seqLength = 256;
 
-let previousNode;
+let previousNodes = {};
+
+const TRACKS = ['drumloop', 'sub'];
 
 const scheduleNote = ctx => {
   const currentNote = ctx.sequencer.currentNote;
   ctx.scene.store.setCurrentIndex(currentNote);
   const pattern = ctx.scene.pattern;
-  const note = pattern[currentNote % pattern.length];
 
-  if (note !== null) {
-    if (previousNode) {
-      previousNode.stop();
+  TRACKS.forEach(track => {
+    const note = pattern[track][currentNote % pattern[track].length];
+
+    if (note !== null) {
+      if (previousNodes[track]) {
+        previousNodes[track].stop();
+      }
+      previousNodes[track] = playSample(ctx, note, track);
     }
-    previousNode = playSample(ctx, note, Object.keys(ctx.scene.samples)[0]);
-  }
+  });
 };
 
 const nextNote = ctx => {

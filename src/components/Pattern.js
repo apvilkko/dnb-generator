@@ -6,9 +6,9 @@ const Pattern = observer(({store: {pattern, tempo, currentIndex}}) => (
     <div>BPM: {tempo}</div>
     <h2>Drum loop pattern</h2>
     <div className="pattern">
-      {pattern.map((item, i) =>
+      {pattern.drumloop.map((item, i) =>
         <div
-          className={`pattern-item${currentIndex % pattern.length === i ? ' current' : ''}`}
+          className={`pattern-item${currentIndex % pattern.drumloop.length === i ? ' current' : ''}`}
           key={i}
         >
           {item ? item.index : ''}

@@ -18,6 +18,7 @@ class App extends Component {
           <div>
             <h3>Version history</h3>
             <ul>
+              <li>0.2: add sub, different algorithms</li>
               <li>0.1: random chopped drumfunk amen breaks</li>
             </ul>
           </div>
