@@ -1,5 +1,5 @@
 export default (ctx, fn) => {
-  const inlined = 'self.addEventListener(\'message\', function() {setInterval(function() {self.postMessage(true)}, 10)});';
+  const inlined = 'self.addEventListener(\'message\', function() {setInterval(function() {self.postMessage(true)}, 200)});';
   const url = window.URL || window.webkitURL;
   const blobUrl = url.createObjectURL(new Blob([inlined]));
   const worker = new Worker(blobUrl);

@@ -16,7 +16,7 @@ const createAudioEngine = () => {
     },
     sequencer: {
       currentNote: 0,
-      nextNoteTime: context.currentTime,
+      lastTickTime: context.currentTime,
     },
   }
 };

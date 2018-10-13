@@ -12,12 +12,12 @@ class App extends Component {
         <main>
           <button type="button" onClick={actions.newScene}>New</button>
           <Pattern store={store} />
-
         </main>
         <footer>
           <div>
             <h3>Version history</h3>
             <ul>
+              <li>0.3: fix timing</li>
               <li>0.2: add sub, different algorithms</li>
               <li>0.1: random chopped drumfunk amen breaks</li>
             </ul>

@@ -1,6 +1,6 @@
 const getRateFromPitch = pitch => Math.pow(2, (pitch * 100) / 1200);
 
-const playSample = (ctx, note, track) => {
+const playSample = (ctx, note, track, delta = 0) => {
   const node = ctx.context.createBufferSource();
   node.buffer = ctx.buffers[ctx.scene.samples[track]];
   node.connect(ctx.mixer.tracks[track].gain);
@@ -11,7 +11,7 @@ const playSample = (ctx, note, track) => {
     node.playbackRate.value = ctx.scene.playbackRate;
   }
   const offset = (note && note.time) ? note.time : 0;
-  node.start(0, offset);
+  node.start(ctx.context.currentTime + delta, offset);
   return node;
 };
 
