@@ -6,10 +6,12 @@ import registerServiceWorker from './registerServiceWorker';
 import init, {actions} from './dnb';
 import store from './store';
 
-init();
+const isProd = process.env.NODE_ENV === 'production'
+init(isProd);
+const acts = actions(isProd)
 
 ReactDOM.render(
-  <App store={store} actions={actions} />,
+  <App store={store} actions={acts} />,
   document.getElementById('root')
 );
 registerServiceWorker();

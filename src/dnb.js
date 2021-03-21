@@ -4,14 +4,16 @@ import createPattern from './pattern';
 import generateHitMap from './hitmap';
 import {randRange, sample} from './random';
 import startTick from './worker';
-import catalog from './catalog';
-import {tick} from './sequencer';
+import catalog, {bassCatalog} from './catalog';
+import {tick, togglePlay} from './sequencer';
 import store from './store';
 
 let engine;
 
-const generate = () => {
-  const sampleName = 'amen1';
+const randomBassSample = () => sample(Object.keys(bassCatalog))
+const randomDrumSample = () => sample(Object.keys(catalog))
+
+const generate = (sampleName, bassSample) => {
   const tempo = randRange(160, 180);
   const sampleTempo = catalog[sampleName].bpm;
   const hitMap = generateHitMap(sampleName);
@@ -19,10 +21,10 @@ const generate = () => {
   const pattern = createPattern(numBars, hitMap);
   store.setPattern(pattern);
   store.setTempo(tempo);
-  console.log(tempo, sampleTempo, pattern);
+  console.log(tempo, sampleName, bassSample, pattern);
   const samples = {
-    drumloop: sampleName,
-    sub: 'sub1',
+    drumloop: {name: sampleName, gain: catalog[sampleName].gain || 1.0},
+    sub: {gain: bassCatalog[bassSample].gain || 0.6, name: bassSample},
   };
   return {
     playbackRate: tempo / sampleTempo * .99,
@@ -33,16 +35,35 @@ const generate = () => {
   };
 };
 
-const init = () => {
-  engine = createAudioEngine();
-  loadSample(engine.context, engine.buffers, 'amen1');
-  loadSample(engine.context, engine.buffers, 'sub1');
-  engine.scene = generate();
-  startTick(engine, tick);
+const generateNew = () => {
+  const sampleName = randomDrumSample()
+  const bassSample = randomBassSample()
+  loadSample(engine.context, engine.buffers, sampleName);
+  loadSample(engine.context, engine.buffers, bassSample);
+  engine.scene = generate(sampleName, bassSample);
+}
+
+let inited = false
+
+const init = (isProd) => {
+  if (!isProd) {
+    engine = createAudioEngine();
+    generateNew()
+    startTick(engine, tick);
+    inited = true
+  }
 };
 
-export const actions = {
-  newScene: () => { engine.scene = generate(); },
-};
+export const actions = (isProd) => ({
+  newScene: () => { generateNew() },
+  togglePlay: () => {
+    if (!inited && isProd) {
+      init(false)
+    } else {
+      togglePlay()
+    }
+
+  }
+});
 
 export default init;

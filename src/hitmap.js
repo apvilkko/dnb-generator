@@ -17,7 +17,7 @@ const generateHitMap = sampleName => {
   return R.pipe(
     mapIndexed((v, k) => ({index: k, hit: v, time: indexToTime(spec, k)})),
     R.reject(R.propEq('hit', 0)),
-  )(spec.hits);
+  )(spec.hits.split(''));
 };
 
 export default generateHitMap;

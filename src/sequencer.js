@@ -1,6 +1,6 @@
 import playSample from './player';
 
-const playing = true;
+let playing = true;
 const noteLen = 0.25;
 const seqLength = 256;
 
@@ -25,6 +25,14 @@ const scheduleNote = (ctx, delta = 0) => {
     }
   });
 };
+
+export const togglePlay = state => {
+  if (typeof state === 'boolean') {
+    playing = state
+  } else {
+    playing = !playing
+  }
+}
 
 const nextNote = ctx => {
   const currentNote = ctx.sequencer.currentNote;
