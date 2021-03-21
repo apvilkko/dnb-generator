@@ -39,12 +39,13 @@ const subAlgos = [
   // follow drums
   (len, rootPitch, drumloop) => {
     const pattern = empty(len);
-    drumloop.forEach((v,i) => {
+    for (let i = 0; i < len; ++i) {
+      const v = drumloop[i % drumloop.length]
       if (v && (v.hit === 'k' || v.hit === 's' || v.hit === 'c') &&
-        i % 2 === 0 && rand(i === 0 ? 100 : 50)) {
+          i % 2 === 0 && rand(i === 0 ? 100 : 50)) {
         pattern[i] = randSub(rootPitch);
       }
-    });
+    }
     if (!pattern[0]) {
       pattern[0] = randSub(rootPitch);
     }
@@ -131,13 +132,27 @@ const drumloopAlgos = [
   },
 ]
 
-const createPattern = (numBars, hitMap) => {
+const sparse = (len, rootPitch) => {
+  const pattern = empty(len);
+  for (let i = 0 ; i < len; ++i) {
+    if (i % 2 === 0 && rand(4)) {
+      pattern[i] = {pitch: rootPitch + randRange(-7, 7)}
+    }
+  }
+  return pattern;
+}
+
+const createPattern = (hitMap) => {
   const rootPitch = randRange(-4, 4);
-  const len = numBars * 16;
-  const drumloop = sample(drumloopAlgos)(len, hitMap);
+  const len = [sample([2,4]), sample([2,4]), sample([2,4]), sample([4,8]), sample([4,8])].map(x => x * 16)
+  const drumloop = sample(drumloopAlgos)(len[0], hitMap);
+  const drumloop2 = sample(drumloopAlgos)(len[1], hitMap);
   return {
     drumloop,
-    sub: sample(subAlgos)(len, rootPitch, drumloop),
+    drumloop2,
+    sub: sample(subAlgos)(len[2], rootPitch, drumloop),
+    fx: sparse(len[3], rootPitch),
+    stab: sparse(len[4], rootPitch),
   };
 };
 

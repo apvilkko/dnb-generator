@@ -1,5 +1,24 @@
+body, button, input {
+  font-family: Goldman;
+}
+
 body {
+  font-size: 19px;
   text-align: center;
+  background: black;
+  color: #ccc;
+}
+
+a {
+  color: #ccc;
+}
+
+button {
+  background-color: transparent;
+  color: #ccc;
+  border: 1px solid #555;
+  margin-right: 0.5rem;
+  font-size: 19px;
 }
 
 h1 {
@@ -21,18 +40,18 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #999;
+  border: 1px solid #444;
   height: 2rem;
   min-width: calc(100% / 17);
   transition: background-color linear 0.1s;
 }
 
 .pattern-item:nth-child(4n+1) {
-  background-color: #ddd;
+  background-color: #555;
 }
 
 .pattern-item:nth-child(16n+1) {
-  background-color: #ccc;
+  background-color: #333;
 }
 
 .current {

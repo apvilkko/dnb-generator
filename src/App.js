@@ -12,12 +12,14 @@ class App extends Component {
         <main>
           <button type="button" onClick={actions.newScene}>New</button>
           <button type="button" onClick={actions.togglePlay}>Play/pause</button>
+          <label>Volume<input type="range" onClick={actions.adjustVolume} min="0" max="100" /></label>
           <Pattern store={store} />
         </main>
         <footer>
           <div>
             <h3>Version history</h3>
             <ul>
+              <li>0.5: add fx, stab</li>
               <li>0.4: add more samples</li>
               <li>0.3: fix timing</li>
               <li>0.2: add sub, different algorithms</li>

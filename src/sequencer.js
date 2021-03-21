@@ -8,7 +8,7 @@ let previousNodes = {};
 
 const WORKER_TICK_LEN = 0.2;
 
-const TRACKS = ['drumloop', 'sub'];
+const TRACKS = ['drumloop', 'drumloop2', 'sub', 'fx', 'stab'];
 
 const scheduleNote = (ctx, delta = 0) => {
   const currentNote = ctx.sequencer.currentNote;

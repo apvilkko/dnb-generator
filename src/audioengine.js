@@ -2,16 +2,18 @@ import createMixer from './mixer';
 
 const createAudioEngine = () => {
   const context = new (window.AudioContext || window.webkitAudioContext)();
-  const mixer = createMixer(context);
+  const buffers = {}
   return {
     context,
-    mixer,
-    buffers: {},
+    buffers,
     scene: {
       tempo: 170,
       pattern: {
         drumloop: [],
+        drumloop2: [],
         sub: [],
+        fx: [],
+        stab: []
       },
     },
     sequencer: {
@@ -20,5 +22,11 @@ const createAudioEngine = () => {
     },
   }
 };
+
+export const addMixer = (engine) => {
+  const mixer = createMixer(engine.context, engine.buffers);
+  engine.mixer = mixer
+}
+
 
 export default createAudioEngine;

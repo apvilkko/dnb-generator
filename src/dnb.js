@@ -1,30 +1,35 @@
-import createAudioEngine from './audioengine';
+import createAudioEngine, {addMixer} from './audioengine';
 import loadSample from './loadsample';
 import createPattern from './pattern';
 import generateHitMap from './hitmap';
 import {randRange, sample} from './random';
 import startTick from './worker';
-import catalog, {bassCatalog} from './catalog';
+import catalog, {bassCatalog, fx, stabs} from './catalog';
 import {tick, togglePlay} from './sequencer';
 import store from './store';
 
 let engine;
 
+const randomStab = () => sample(Object.keys(stabs))
+const randomFx = () => sample(Object.keys(fx))
 const randomBassSample = () => sample(Object.keys(bassCatalog))
 const randomDrumSample = () => sample(Object.keys(catalog))
 
-const generate = (sampleName, bassSample) => {
+const generate = (smpls) => {
+  const [sampleName, dr2sample, bassSample, stabSample, fxSample] = smpls
   const tempo = randRange(160, 180);
   const sampleTempo = catalog[sampleName].bpm;
   const hitMap = generateHitMap(sampleName);
-  const numBars = sample([2, 4]);
-  const pattern = createPattern(numBars, hitMap);
+  const pattern = createPattern(hitMap);
   store.setPattern(pattern);
   store.setTempo(tempo);
-  console.log(tempo, sampleName, bassSample, pattern);
+  console.log(tempo, sampleName, dr2sample, bassSample, pattern, stabSample, fxSample);
   const samples = {
     drumloop: {name: sampleName, gain: catalog[sampleName].gain || 1.0},
+    drumloop2: {name: dr2sample, gain: sample([(catalog[dr2sample].gain || 1.0) * randRange(0.3, 1.0), 0])},
     sub: {gain: bassCatalog[bassSample].gain || 0.6, name: bassSample},
+    stab: {gain: stabs[stabSample].gain || 0.6, name: stabSample},
+    fx: {gain: fx[fxSample].gain || 0.6, name: fxSample},
   };
   return {
     playbackRate: tempo / sampleTempo * .99,
@@ -36,11 +41,14 @@ const generate = (sampleName, bassSample) => {
 };
 
 const generateNew = () => {
-  const sampleName = randomDrumSample()
-  const bassSample = randomBassSample()
-  loadSample(engine.context, engine.buffers, sampleName);
-  loadSample(engine.context, engine.buffers, bassSample);
-  engine.scene = generate(sampleName, bassSample);
+  const dr1 = randomDrumSample()
+  let dr2 = randomDrumSample()
+  while (dr2 === dr1) {
+    dr2 = randomDrumSample()
+  }
+  const samples = [dr1, dr2, randomBassSample(), randomStab(), randomFx()]
+  samples.forEach(s => loadSample(engine.context, engine.buffers, s))
+  engine.scene = generate(samples);
 }
 
 let inited = false
@@ -48,9 +56,12 @@ let inited = false
 const init = (isProd) => {
   if (!isProd) {
     engine = createAudioEngine();
-    generateNew()
-    startTick(engine, tick);
-    inited = true
+    loadSample(engine.context, engine.buffers, 'impulse1').then(() => {
+      addMixer(engine)
+      generateNew()
+      startTick(engine, tick);
+      inited = true
+    })
   }
 };
 
@@ -62,7 +73,9 @@ export const actions = (isProd) => ({
     } else {
       togglePlay()
     }
-
+  },
+  adjustVolume: evt => {
+    engine.mixer.master.gain.value = (evt.target.value || 50) / 100.0
   }
 });
 
